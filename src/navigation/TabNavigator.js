@@ -1,51 +1,84 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MainStackNavigator } from "./StackNavigator";
-import { AboutStackNavigator } from "./StackNavigator";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Home from '../screens/Home';
+import Maps from '../screens/Maps';
+import About from '../screens/About';
+import Search from '../screens/Search';
+import Favorite from '../screens/Favorite';
+import LoginScreen from '../screens/Login';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+function MyTabs() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  if (!isLoggedIn) {
+    // If not logged in, show the LoginScreen
+    return <LoginScreen />;
+  }
+
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: 'white',
-        tabBarInactiveTintColor: 'lightgray',
-        tabBarLabelStyle: {
-          fontSize: 12,
-        },
-        tabBarStyle: {
-          backgroundColor: '#FF6347',
-        },
+        tabBarActiveTintColor: '#e91e63',
+        tabBarStyle: { marginBottom: 10 },
       }}
     >
       <Tab.Screen
         name="Home"
-        component={MainStackNavigator}
+        component={Home}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="home" size={26} color={'white'} />
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={Maps}
+        options={{
+          tabBarLabel: 'Map',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="map" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarLabel: 'Search',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="search" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Favorite"
+        component={Favorite}
+        options={{
+          tabBarLabel: 'Favorite',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="heart" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
         name="About"
-        component={AboutStackNavigator}
+        component={About}
         options={{
           tabBarLabel: 'About',
-          tabBarIcon: () => (
-            <MaterialCommunityIcons
-              name="video-stabilization"
-              size={26}
-              color={'white'}
-            />
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="user" size={size} color={color} />
           ),
         }}
       />
     </Tab.Navigator>
   );
-};
+}
 
-export default BottomTabNavigator;
+export default MyTabs;
