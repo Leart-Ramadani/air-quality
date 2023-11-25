@@ -1,0 +1,28 @@
+{
+    "popularproducts": [
+        {
+            "id": 1,
+            "name": "iPad",
+            "category": "Tablet",
+            "price": "800$",
+            "images": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-storage-select-202207-space-gray-wifi_FMT_WHH?wid=1280&hei=720&fmt=p-jpg&qlt=95&.v=1670879028866",
+            "desc": "Lorem Ipsumaj"
+        },
+        {
+            "id": 2,
+            "name": "iPhone 15",
+            "category": "Phone",
+            "price": "1000$",
+            "images": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-7inch-pink?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1692923784895",
+            "desc": "Lorem Ipsumaj"
+        },
+        {
+            "id": 3,
+            "name": "Lenovo 3",
+            "category": "Laptop",
+            "price": "1200$",
+            "images": "https://m.media-amazon.com/images/I/41dKQaucGQL._AC_UF894,1000_QL80_.jpg",
+            "desc": "Lorem Ipsumaj"
+        }
+    ]
+} 
