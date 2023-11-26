@@ -1,18 +1,21 @@
-// AirQualityData.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
+import { Searchbar } from 'react-native-paper';
 import tailwind from 'twrnc';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { TextInput } from 'react-native-paper';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import MapView, { Marker } from 'react-native-maps';
 
-const Search = () => {
+const Search = ({ onSearch }) => {
     const [searchResults, setSearchResults] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedResult, setSelectedResult] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(
-                    'https://api.waqi.info/search/?token=0a44da259d4014c88368a078e04de8dfbc82f721&keyword=Prishtine'
+                    `https://api.waqi.info/search/?token=0a44da259d4014c88368a078e04de8dfbc82f721&keyword=${searchQuery}`
                 );
 
                 if (!response.ok) {
@@ -27,42 +30,99 @@ const Search = () => {
         };
 
         fetchData();
-    }, []);
+    }, [searchQuery]);
 
     const renderItem = ({ item }) => (
-        <View style={styles.item}>
-            <Text>{`Name: ${item.station.name}`}</Text>
-            <Text>{`AQI: ${item.aqi}`}</Text>
-            {/* Add more information as needed */}
-        </View>
+        <TouchableOpacity onPress={() => handleResultPress(item)}>
+            <View style={[styles.item, styles.resultItem]}>
+                <Text>{`Name: ${item.station.name}`}</Text>
+                <Text>{`AQI: ${item.aqi}`}</Text>
+            </View>
+        </TouchableOpacity>
     );
 
+    const handleResultPress = (result) => {
+        setSelectedResult(result);
+        setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
+        setSelectedResult(null);
+    };
+
+    const getAQIStatus = (aqi) => {
+        if (aqi >= 0 && aqi <= 50) {
+            return 'Good';
+        } else if (aqi > 50 && aqi <= 100) {
+            return 'Moderate';
+        } else if (aqi > 100 && aqi <= 150) {
+            return 'Unhealthy for sensitive groups';
+        } else if (aqi > 150 && aqi <= 200) {
+            return 'Unhealthy';
+        } else if (aqi > 200 && aqi <= 300) {
+            return 'Very Unhealthy';
+        } else {
+            return 'Hazardous';
+        }
+    };
+
     return (
-        <View style={tailwind`w-full flex justify-center`}>
-            <Text style={tailwind`text-center text-lg font-semibold`}>Search city:</Text>
-            <SafeAreaView style={tailwind`w-100 flex flex-row gap-1`}>
-                <TextInput
-                    label="Enter City"
-                    right={<TextInput.Icon icon="magnify" />}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={tailwind`w-full px-2 pt-1`}>
+                <Searchbar
+                    placeholder="Enter City"
+                    value={searchQuery}
+                    onChangeText={(text) => setSearchQuery(text)}
                     style={tailwind`w-full`}
                 />
-
             </SafeAreaView>
-            {/* <FlatList
+
+            <FlatList
                 data={searchResults}
                 keyExtractor={(item) => item.station.name}
                 renderItem={renderItem}
-            /> */}
-        </View>
+                style={styles.results}
+            />
+
+            <Modal visible={isModalVisible} onRequestClose={closeModal}>
+                {selectedResult && (
+                    <View style={styles.modalContainer}>
+                        <MapView
+                            style={styles.map}
+                            initialRegion={{
+                                latitude: selectedResult.station.geo[0],
+                                longitude: selectedResult.station.geo[1],
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01,
+                            }}
+                        >
+                            <Marker
+                                coordinate={{
+                                    latitude: selectedResult.station.geo[0],
+                                    longitude: selectedResult.station.geo[1],
+                                }}
+                                title={selectedResult.station.name}
+                                description={`AQI: ${selectedResult.aqi}`}
+                            />
+                        </MapView>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>{selectedResult.station.name}</Text>
+                            <Text>{`Air Quality Index: ${selectedResult.aqi}`}</Text>
+                            <Text>{`Status: ${getAQIStatus(selectedResult.aqi)}`}</Text>
+                            <Text>{`Last time checked: ${selectedResult.time.stime}`}</Text>
+                        </View>
+                        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </Modal>
+        </GestureHandlerRootView>
     );
 };
 
 const styles = StyleSheet.create({
-    text: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
     item: {
         padding: 10,
         marginVertical: 8,
@@ -70,10 +130,36 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
     },
-    input: {
-        borderColor: 'grey',
-        borderWidth: 2
-    }
+    results: {
+        backgroundColor: 'white',
+    },
+    resultItem: {
+        backgroundColor: 'white',
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    map: {
+        flex: 1,
+    },
+    modalContent: {
+        padding: 16,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    closeButton: {
+        padding: 10,
+        backgroundColor: '#3498db',
+        alignItems: 'center',
+    },
+    closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
 });
 
 export default Search;

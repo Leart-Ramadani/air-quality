@@ -1,38 +1,43 @@
-// LoginScreen.js
+// Import necessary libraries
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { TextInput, Button, Snackbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import data from "../data/data.json";
+import tailwind from 'twrnc';
 
 const LoginScreen = () => {
+    // Initialize state variables
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
+
+    // Access the navigation object using useNavigation hook
     const navigation = useNavigation();
 
+    // Handle login logic
     const handleLogin = () => {
-        // Check if the entered credentials match any user in the JSON data
         const isValidUser = data.some(
             (user) => user.username === username && user.password === password
         );
 
         if (isValidUser) {
-            // Successful login
-            navigation.replace('Home'); // Navigate to the Home screen
+            navigation.navigate('Home'); // Fixed this line
         } else {
-            // Invalid credentials, show a snackbar or an alert
             setIsSnackbarVisible(true);
         }
     };
 
+    // Render the component
     return (
         <View style={styles.container}>
+            <Text style={tailwind`text-3xl mb-6 text-center`}>Log in</Text>
             <TextInput
                 label="Username"
                 value={username}
                 onChangeText={(text) => setUsername(text)}
                 style={styles.input}
+                autoCapitalize='none'
             />
             <TextInput
                 label="Password"
@@ -40,6 +45,7 @@ const LoginScreen = () => {
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry
                 style={styles.input}
+                autoCapitalize='none'
             />
             <Button mode="contained" onPress={handleLogin} style={styles.button}>
                 Login
@@ -58,6 +64,7 @@ const LoginScreen = () => {
     );
 };
 
+// Styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -72,4 +79,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Export the component
 export default LoginScreen;

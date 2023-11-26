@@ -5,19 +5,13 @@ import Maps from '../screens/Maps';
 import About from '../screens/About';
 import Search from '../screens/Search';
 import Favorite from '../screens/Favorite';
-import LoginScreen from '../screens/Login';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  if (!isLoggedIn) {
-    // If not logged in, show the LoginScreen
-    return <LoginScreen />;
-  }
 
   return (
     <Tab.Navigator
@@ -48,16 +42,6 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          tabBarLabel: 'Search',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="search" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
         name="Favorite"
         component={Favorite}
         options={{
@@ -67,7 +51,7 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="About"
         component={About}
         options={{
@@ -76,7 +60,7 @@ function MyTabs() {
             <Icon name="user" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

@@ -1,27 +1,27 @@
 [
-    {
-        "username": "leart",
-        "password": "leart",
-        "favorite": "New York"
-    },
-    {
-        "username": "JaneSmith",
-        "password": "pass456",
-        "favorite": "London"
-    },
-    {
-        "username": "MikeJohnson",
-        "password": "qwerty",
-        "favorite": "Tokyo"
-    },
-    {
-        "username": "EmilyDavis",
-        "password": "p@ssw0rd",
-        "favorite": "Paris"
-    },
-    {
-        "username": "ChrisWilson",
-        "password": "secret",
-        "favorite": "Sydney"
-    }
+  {
+    "username": "leart",
+    "password": "leart",
+    "favorite": ["New York", "Paris", "Prishtine"]
+  },
+  {
+    "username": "JaneSmith",
+    "password": "pass456",
+    "favorite": ["London"]
+  },
+  {
+    "username": "MikeJohnson",
+    "password": "qwerty",
+    "favorite": ["Tokyo"]
+  },
+  {
+    "username": "EmilyDavis",
+    "password": "p@ssw0rd",
+    "favorite": ["Paris"]
+  },
+  {
+    "username": "ChrisWilson",
+    "password": "secret",
+    "favorite": ["Sydney"]
+  }
 ]
